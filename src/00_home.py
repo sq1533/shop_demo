@@ -1,45 +1,41 @@
 import flet
-import shop_demo.src.style as style
+import shop_demo.src.widget as WG
 
 async def main(page: flet.Page):
-    page.window.max_width = 800
-    page.scroll = 'always'
-    image_urls = [f'assets/01_itemRecommend/G25031900{i}.jpg' for i in range(1, 6)]
-    current_index = 0
+    page.window.max_width = 600
+    page.window.resizable = True
 
-    event_image = flet.Image(
-        src = image_urls[current_index],
-        width = page.window.width * 0.8,
-        height = page.window.width * 0.6,
-        fit = flet.ImageFit.FILL,
-        opacity = 1,
-        animate_opacity = flet.animation.Animation(duration=300, curve=flet.AnimationCurve.EASE_IN_OUT),
-    )
+    def page_resize() -> list:
+        new_width = page.window.width * 0.8
+        new_height = new_width * 0.6
+        newSize = [new_width, new_height]
+        page.update()
+        return newSize
 
-    eventVanner = flet.Row(
-        controls = [event_image],
-        expand = 1,
-        wrap = False,
-        scroll = 'always',
-        alignment = flet.MainAxisAlignment.CENTER,
-    )
+    page.on_resized = page_resize()
 
-    pageContainer = flet.Container(
-            alignment = flet.alignment.center,
-            border = flet.border.all(width=2,color=flet.Colors.BLACK45),
-            content = flet.Column(
-                [
-                    eventVanner,
-                    style.MyButton(
-                        text='test',
-                    )
-                ],
-                alignment= flet.MainAxisAlignment.START,
-                horizontal_alignment=flet.CrossAxisAlignment.CENTER
-            )
+    initial_width = page_resize()[0] * 0.8
+    initial_height = page_resize()[1] * 0.6
+
+    mainPage = flet.Container(
+        alignment=flet.alignment.top_center,
+        expand=True,
+        border = flet.border.all(
+            width = 2,
+            color=flet.Colors.BLACK45
+        ),
+        content = flet.Column(
+            [
+                WG.vannerBox(
+                    image = 'assets/01_itemRecommend/G250319001.jpg',
+                    width = initial_width,
+                    height = initial_height
+                ),
+            ],
         )
+    )
 
-    page.add(pageContainer)
+    page.add(mainPage)
 
 if __name__ == "__main__":
     flet.app(target = main)
