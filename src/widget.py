@@ -8,14 +8,15 @@ def vannerBox(image:str, width, height) -> flet.Image:
         height = height,
     )
 
-def itemBox(image:str, width, height) -> flet.Card:
+def itemBox(image:str) -> flet.Card:
     return flet.Card(
         content = flet.Container(
             content = flet.Column(
                 controls = [
                     flet.Image(
                         src = image,
-
+                        width = 300,
+                        height = 200
                     ),
                     flet.ListTile(
                         leading=flet.Icon(flet.Icons.ALBUM),
@@ -30,7 +31,7 @@ def itemBox(image:str, width, height) -> flet.Card:
                     ),
                 ]
             ),
-            width = width,
-            height = height,
+            width = 400,
+            height = 800,
         )
     )
