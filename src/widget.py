@@ -1,4 +1,5 @@
 import flet
+import flet.canvas
 
 def APPBar(image:dict) -> flet.AppBar:
     return flet.AppBar(
@@ -13,15 +14,14 @@ def APPBar(image:dict) -> flet.AppBar:
                 ),
             leading_width = 100,
             center_title=False,
-            bgcolor = flet.Colors.BROWN_400,
+            bgcolor = flet.Colors.BROWN_100,
             actions = [
-                flet.Container(
-                    url = '/login',
-                    url_target = flet.UrlTarget.TOP,
-                    content = flet.Text(
-                        "Login / 회원가입"
-                        ),
-                    ),
+                flet.TextButton(
+                    text = 'Login / 회원가입',
+                    scale = 1,
+                    icon = flet.Icons.LOGIN,
+                    icon_color = flet.Colors.WHITE,
+                ),
                 flet.PopupMenuButton(
                     elevation = 100,
                     icon = flet.Icons.MENU,
@@ -49,14 +49,23 @@ def APPBar(image:dict) -> flet.AppBar:
 
 def bottomNavBar() -> flet.BottomAppBar:
     return flet.BottomAppBar(
-        bgcolor = flet.Colors.DEEP_ORANGE_700,
+        bgcolor = flet.Colors.ORANGE_400,
         shape = flet.NotchShape.CIRCULAR,
         content = flet.Row(
             alignment = flet.MainAxisAlignment.SPACE_EVENLY,
             controls=[
-                flet.IconButton(icon=flet.Icons.MENU, icon_color=flet.Colors.WHITE),
-                flet.IconButton(icon=flet.Icons.SEARCH, icon_color=flet.Colors.WHITE),
-                flet.IconButton(icon=flet.Icons.FAVORITE, icon_color=flet.Colors.WHITE),
+                flet.IconButton(
+                    icon = flet.Icons.MENU,
+                    icon_color = flet.Colors.WHITE
+                    ),
+                flet.IconButton(
+                    icon = flet.Icons.SEARCH,
+                    icon_color = flet.Colors.WHITE
+                    ),
+                flet.IconButton(
+                    icon = flet.Icons.FAVORITE,
+                    icon_color = flet.Colors.WHITE
+                    ),
             ]
         ),
     )
@@ -64,24 +73,24 @@ def bottomNavBar() -> flet.BottomAppBar:
 def vannerBox(image:dict, width, height) -> flet.Image:
     return flet.Image(
         src = image["src"],
-        fit = flet.ImageFit.FILL,
         width = width,
         height = height,
+        fit = flet.ImageFit.FILL,
     )
 
 def itemBox(image:dict, hoverE, clickE) -> flet.Card:
     return flet.Card(
-        color = flet.Colors.BROWN_100,
+        color = flet.Colors.ORANGE_800,
         clip_behavior = flet.ClipBehavior.HARD_EDGE,
         elevation = 3,
-        width = 180,
-        height = 300,
+        width = 200,
+        height = 280,
         content = flet.Column(
             alignment = flet.MainAxisAlignment.START,
             controls = [
                 flet.Container(
                     alignment = flet.alignment.center,
-                    height = 180,
+                    height = 200,
                     url = image["url"],
                     url_target = flet.UrlTarget.PARENT,
                     on_hover = hoverE,
@@ -92,37 +101,33 @@ def itemBox(image:dict, hoverE, clickE) -> flet.Card:
                     ),),
                 flet.Container(
                     alignment = flet.alignment.center_left,
-                    margin = flet.margin.only(10, 0, 0, 0),
+                    margin = flet.margin.only(10, 0, 10, 0),
                     content = flet.Column(
                         alignment = flet.MainAxisAlignment.START,
                         controls = [
                             flet.Text(
                                 image["name"],
-                                color = flet.Colors.GREY_700,
+                                color = flet.Colors.WHITE,
                                 weight = flet.FontWeight.W_500,
                                 ),
-                            flet.Text(
-                                f"{image["price"]:,}",
-                                color = flet.Colors.GREY_700,
-                                weight = flet.FontWeight.W_900,
-                                ),
+                            flet.Row(
+                                alignment = flet.MainAxisAlignment.SPACE_BETWEEN,
+                                controls = [
+                                    flet.Text(
+                                        f"{image["price"]:,}",
+                                        color = flet.Colors.WHITE,
+                                        weight = flet.FontWeight.W_900,
+                                        ),
+                                    flet.Container(
+                                        on_click = clickE,
+                                        content = flet.Icon(
+                                            name = flet.Icons.FAVORITE_BORDER,
+                                            color = flet.Colors.WHITE,
+                                            size = 30,
+                                            ),
+                                        ),
+                                    ],),
                             ],),
                         ),
-                flet.Container(
-                    alignment = flet.alignment.center_left,
-                    margin = flet.margin.only(0, 0, 10, 0),
-                    content = flet.Row(
-                        alignment = flet.MainAxisAlignment.END,
-                        controls = [
-                            flet.Container(
-                                on_click = clickE,
-                                content = flet.Icon(
-                                    name = flet.Icons.FAVORITE_BORDER,
-                                    color = flet.Colors.RED_700,
-                                    size = 30,
-                                ),
-                            ),
-                        ],)
-                )   ,
                 ],),
         )
