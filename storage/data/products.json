@@ -1,66 +1,50 @@
 {
     "logo":{
         "src":"assets/00_logo/logo.jpg",
-        "url":"http:localhost:8501/"
+        "url":"/"
     },
     "recommend":{
-        "item_1":{
-            "id":"G250319001",
+        "G250319001":{
             "src":"assets/01_itemRecommend/G250319001.jpg",
             "name":"샘플 상품 1",
-            "price":19900,
-            "url":"http:localhost:8501/items/G250319001"
+            "price":19900
         },
-        "item_2":{
-            "id":"G250319002",
+        "G250319002":{
             "src":"assets/01_itemRecommend/G250319002.jpg",
             "name":"샘플 상품 2",
-            "price":118000,
-            "url":"http:localhost:8501/items/G250319002"
+            "price":118000
         },
-        "item_3":{
-            "id":"G250319003",
+        "G250319003":{
             "src":"assets/01_itemRecommend/G250319003.jpg",
             "name":"샘플 상품 3",
-            "price":25900,
-            "url":"http:localhost:8501/items/G250319003"
+            "price":25900
         },
-        "item_4":{
-            "id":"G250319004",
+        "G250319004":{
             "src":"assets/01_itemRecommend/G250319004.jpg",
             "name":"샘플 상품 4",
-            "price":360000,
-            "url":"http:localhost:8501/items/G250319004"
+            "price":360000
         },
-        "item_5":{
-            "id":"G250319005",
+        "G250319005":{
             "src":"assets/01_itemRecommend/G250319005.jpg",
             "name":"샘플 상품 5",
-            "price":1000000,
-            "url":"http:localhost:8501/items/G250319005"
+            "price":1000000
         }
     },
     "item":{
-        "item_1":{
-            "id":"G250319003",
+        "G250319003":{
             "src":"assets/02_item/G250319003.jpg",
             "name":"샘플 상품 3",
-            "price":25900,
-            "url":"http:localhost:8501/items//G250319003/"
+            "price":25900
         },
-        "item_2":{
-            "id":"G250319004",
+        "G250319004":{
             "src":"assets/02_item/G250319004.jpg",
             "name":"샘플 상품 4",
-            "price":360000,
-            "url":"http:localhost:8501/items//G250319004/"
+            "price":360000
         },
-        "item_3":{
-            "id":"G250319005",
+        "G250319005":{
             "src":"assets/02_item/G250319005.jpg",
             "name":"샘플 상품 5",
-            "price":1000000,
-            "url":"http:localhost:8501/items//G250319005/"
+            "price":1000000
         }
     }
 }

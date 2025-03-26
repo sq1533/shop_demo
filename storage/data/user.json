@@ -1,9 +1,18 @@
 {
-    "test@gmail.com":{
-        "name":"",
+    "test00@gmail.com":{
+        "nickname":"test",
+        "name":"SDG",
         "phoneNumber":"01012341234",
-        "address00":"",
-        "address01":"",
-        "address02":""
+        "address":[],
+        "like":[],
+        "basket":[]
+    },
+    "test01@gmail.com":{
+        "nickname":"test",
+        "name":"SDG",
+        "phoneNumber":"01012341234",
+        "address":[],
+        "like":[],
+        "basket":[]
     }
 }
