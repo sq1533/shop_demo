@@ -1,11 +1,6 @@
 import flet
 from dataSet import product
 
-# 상품 on_hover 이벤트
-def hoverItem(e):
-    e.control.image.opacity = 0.7 if e.data == "true" else 1
-    e.control.update()
-
 # like 클릭 이벤트
 def favoriteIcon(e):
     icon_widget = e.control.content
@@ -13,10 +8,14 @@ def favoriteIcon(e):
         icon_widget.name = flet.Icons.FAVORITE
     else:
         icon_widget.name = flet.Icons.FAVORITE_BORDER
-    flet.Page.update()
+    e.control.page.update()
 
-def itemCard(image:dict, hoverE, clickE) -> flet.Card:
-    return flet.Card(
+itemRow = flet.Row(expand=True, expand_loose=True)
+
+items = product["item"]
+itemList = list(items.keys())
+for i in itemList:
+    itemCard = flet.Card(
         color = flet.Colors.ORANGE_800,
         clip_behavior = flet.ClipBehavior.HARD_EDGE,
         elevation = 3,
@@ -28,11 +27,10 @@ def itemCard(image:dict, hoverE, clickE) -> flet.Card:
                 flet.Container(
                     alignment = flet.alignment.center,
                     height = 200,
-                    url = image["url"],
+                    url = f"{items[i]["url"]}",
                     url_target = flet.UrlTarget.PARENT,
-                    on_hover = hoverE,
                     image = flet.DecorationImage(
-                        src = image["src"],
+                        src = items[i]["src"],
                         fit = flet.ImageFit.FILL,
                         opacity = 1,
                     ),),
@@ -43,7 +41,7 @@ def itemCard(image:dict, hoverE, clickE) -> flet.Card:
                         alignment = flet.MainAxisAlignment.START,
                         controls = [
                             flet.Text(
-                                image["name"],
+                                items[i]["name"],
                                 color = flet.Colors.WHITE,
                                 weight = flet.FontWeight.W_500,
                                 ),
@@ -51,12 +49,12 @@ def itemCard(image:dict, hoverE, clickE) -> flet.Card:
                                 alignment = flet.MainAxisAlignment.SPACE_BETWEEN,
                                 controls = [
                                     flet.Text(
-                                        f"{image["price"]:,}",
+                                        f"{items[i]["price"]:,}",
                                         color = flet.Colors.WHITE,
                                         weight = flet.FontWeight.W_900,
                                         ),
                                     flet.Container(
-                                        on_click = clickE,
+                                        on_click = favoriteIcon,
                                         content = flet.Icon(
                                             name = flet.Icons.FAVORITE_BORDER,
                                             color = flet.Colors.WHITE,
@@ -64,16 +62,8 @@ def itemCard(image:dict, hoverE, clickE) -> flet.Card:
                                             ),
                                         ),
                                     ],),
-                            ],),
+                                ],),
                         ),
-                ],),
-        )
-
-productCount = list(product["item"]).__len__()
-
-itemCards = []
-for i in range(1, productCount+1):
-    item = itemCard(image=product["item"][f"item_{i}"], hoverE=hoverItem, clickE=favoriteIcon)
-    itemCards.append(item)
-
-item = flet.Row(controls=itemCards, expand=True, expand_loose=True)
+            ],),
+    )
+    itemRow.controls.append(itemCard)

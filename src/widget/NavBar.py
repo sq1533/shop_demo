@@ -1,14 +1,13 @@
 import flet
 from dataSet import product
 
-def APPBar() -> flet.AppBar:
-    return flet.AppBar(
+APPBar = flet.AppBar(
             leading = flet.Container(
                     alignment = flet.alignment.center,
                     url = product["logo"]["url"],
                     url_target = flet.UrlTarget.TOP,
                     image = flet.DecorationImage(
-                        src = product["logo"]["url"],
+                        src = product["logo"]["src"],
                         fit = flet.ImageFit.FILL,
                     ),
                 ),
@@ -47,8 +46,7 @@ def APPBar() -> flet.AppBar:
             ],
         )
 
-def bottomNavBar() -> flet.BottomAppBar:
-    return flet.BottomAppBar(
+bottomBar = flet.BottomAppBar(
         bgcolor = flet.Colors.ORANGE_400,
         shape = flet.NotchShape.CIRCULAR,
         content = flet.Row(

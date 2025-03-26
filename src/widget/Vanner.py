@@ -1,45 +1,34 @@
 import flet
-import time
 from dataSet import product
 
+recommend = product["recommend"]
+itemList = list(recommend.keys())
 
-def vannerBox(image:dict) -> flet.Image:
-    return flet.Image(
-        src = image["src"],
+bigBox = flet.Image(
+    fit = flet.ImageFit.FILL,
+    src = recommend["item_1"]["src"],
+    )
+
+smallBoxRow = flet.Row(
+    spacing = 0,
+    expand = True,
+    expand_loose = True,
+    scroll = flet.ScrollMode.ALWAYS,
+    )
+
+for i in itemList:
+    img = flet.Image(
+        width = 100,
+        height = 100,
         fit = flet.ImageFit.FILL,
+        src = recommend[i]["src"],
     )
+    smallBoxRow.controls.append(img)
 
-def vannerSmallBox(image:str) -> flet.Image:
-    return flet.Image(
-        src = image["src"],
-        fit = flet.ImageFit.FILL,
-    )
-
-bottomRow = flet.Row(
-        expand = True,
-        expand_loose = True,
-        controls = []
-    )
-
-productCount = list(product["recommend"]).__len__()
-
-for i in range(1, productCount+1):
-    item = vannerSmallBox(image=product["recommend"][f"item_{i}"])
-    bottomRow.controls.append(item)
-
-
-def vanner(self) -> flet.Column:
-    Vanner = flet.Column(controls=[])
-    start = 1
-    if start < productCount+1:
-        Vanner.controls.append([vannerBox(image=product["recommend"][f"item_{start}"]), bottomRow])
-        start += 1
-        self.flet.Page.update()
-        time.sleep(10)
-    else:
-        start == 1
-        Vanner.controls.append([vannerBox(image=product["recommend"][f"item_{start}"]), bottomRow])
-        start += 1
-        self.flet.Page.update()
-        time.sleep(10)
-    return Vanner
+vanner = flet.Column(
+    spacing = 0,
+    controls = [
+        bigBox,
+        smallBoxRow,
+    ]
+)
