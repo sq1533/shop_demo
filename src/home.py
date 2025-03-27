@@ -1,15 +1,14 @@
+import secrets
 import flet
-from widget.itemCard import itemCardWidget
+from widget.itemCard import nonLoginItemCardWidget, LoginItemCardWidget
 from widget.vanner import Vanner
 from dataSet import product, user
 
 NAVER_CLIENT_ID = "YOUR_NAVER_CLIENT_ID"
 NAVER_REDIRECT_URI = "http://localhost:8000/naver/callback"
+STATE = secrets.token_hex(8)
 
 def main(page: flet.Page):
-
-    #유저 로그 인/아웃 분류
-    loggin = False
 
     # 메인 페이지
     def home(top, bottom, box) -> flet.View:
@@ -47,10 +46,16 @@ def main(page: flet.Page):
             spacing = 0,
             )
     
+
+    #유저 로그 인/아웃 분류
+    login = False
+
     # 로그인 페이지
     async def login_clicked(e):
-        authorization_url = f"https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id={NAVER_CLIENT_ID}&redirect_uri={NAVER_REDIRECT_URI}&state=random_string" # state는 임의의 값으로 설정
+        authorization_url = f"https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id={NAVER_CLIENT_ID}&redirect_uri={NAVER_REDIRECT_URI}&state={STATE}"
         await page.launch_url(authorization_url)
+        login = True
+        
 
     # APP 상단 바
     APPBar = flet.AppBar(
@@ -105,10 +110,6 @@ def main(page: flet.Page):
             ],),
     )
 
-
-
-
-
     #main Page 설정
     home_main = flet.Container(
         width = 600,
@@ -117,12 +118,11 @@ def main(page: flet.Page):
             horizontal_alignment= flet.CrossAxisAlignment.CENTER,
             controls = [
                 Vanner(page),
-                itemCardWidget(page),
+                nonLoginItemCardWidget(page),
                 ],
             )
         )
-    
-    items = product["item"]
+
     #item Page 설정
     def itemIN(itemID):
         itemsPage_main = flet.Container(
@@ -130,22 +130,8 @@ def main(page: flet.Page):
             bgcolor = flet.Colors.AMBER,
             content = flet.Column(
                 alignment = flet.MainAxisAlignment.START,
-                controls = [
-                    flet.Text(
-                        items[itemID]["name"],
-                        color = flet.Colors.WHITE,
-                        weight = flet.FontWeight.W_500,
-                        ),
-                    flet.Row(
-                        alignment = flet.MainAxisAlignment.SPACE_BETWEEN,
-                        controls = [
-                            flet.Text(
-                                f"{items[itemID]["price"]:,}",
-                                color = flet.Colors.WHITE,
-                                weight = flet.FontWeight.W_900,
-                                ),
-                        ],),
-                ],),
+                controls = [],
+                ),
         )
         return itemsPage_main
 
