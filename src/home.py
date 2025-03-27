@@ -1,15 +1,15 @@
 import flet
+from widget.itemCard import itemCardWidget
+from widget.vanner import Vanner
 from dataSet import product, user
+
+NAVER_CLIENT_ID = "YOUR_NAVER_CLIENT_ID"
+NAVER_REDIRECT_URI = "http://localhost:8000/naver/callback"
 
 def main(page: flet.Page):
 
-    # userLogin 회원 인증을 거쳐, 회원 정보를 불러온다.
-    def userInfo(getUser):
-        if getUser in user.keys():
-            loginUser = user[getUser]
-            return loginUser
-        else:
-            return None
+    #유저 로그 인/아웃 분류
+    loggin = False
 
     # 메인 페이지
     def home(top, bottom, box) -> flet.View:
@@ -46,7 +46,11 @@ def main(page: flet.Page):
             ),
             spacing = 0,
             )
-
+    
+    # 로그인 페이지
+    async def login_clicked(e):
+        authorization_url = f"https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id={NAVER_CLIENT_ID}&redirect_uri={NAVER_REDIRECT_URI}&state=random_string" # state는 임의의 값으로 설정
+        await page.launch_url(authorization_url)
 
     # APP 상단 바
     APPBar = flet.AppBar(
@@ -67,7 +71,7 @@ def main(page: flet.Page):
                 scale = 1,
                 icon = flet.Icons.LOGIN,
                 icon_color = flet.Colors.WHITE,
-                on_click = None,
+                on_click = login_clicked,
             ),
             ],)
 
@@ -102,116 +106,8 @@ def main(page: flet.Page):
     )
 
 
-    # Vanner 설정(이벤트 / 추천 상품)
-    # data loads
-    recommend = product["recommend"]
-    recommendList = list(recommend.keys())
-
-    # big vanner
-    bigBox = flet.Image(
-        fit = flet.ImageFit.FILL,
-        src = recommend[recommendList[0]]["src"],
-        )
-
-    # option vanner
-    smallBoxRow = flet.Row(
-        spacing = 0,
-        expand = True,
-        expand_loose = True,
-        scroll = flet.ScrollMode.ALWAYS,
-        )
-
-    # vanner 목록
-    for i in recommendList:
-        img = flet.Image(
-            width = 100,
-            height = 100,
-            fit = flet.ImageFit.FILL,
-            src = recommend[i]["src"],
-        )
-        smallBoxRow.controls.append(img)
-
-    # main vanner
-    vanner = flet.Column(
-        spacing = 0,
-        controls = [
-            bigBox,
-            smallBoxRow,
-        ],)
 
 
-    # itemCard
-    # data loads
-    items = product["item"]
-    itemList = list(items.keys())
-
-    # main itemCard
-    itemRow = flet.Row(expand=True, expand_loose=True)
-
-    # like 클릭 이벤트
-    def favoriteIcon(e):
-        icon_widget = e.control.content
-        if icon_widget.name == flet.Icons.FAVORITE_BORDER:
-            icon_widget.name = flet.Icons.FAVORITE
-        else:
-            icon_widget.name = flet.Icons.FAVORITE_BORDER
-        e.control.page.update()
-
-    # itemCard 목록
-    for i in itemList:
-        itemCard = flet.Card(
-            color = flet.Colors.ORANGE_800,
-            clip_behavior = flet.ClipBehavior.HARD_EDGE,
-            elevation = 3,
-            width = 200,
-            height = 280,
-            content = flet.Column(
-                alignment = flet.MainAxisAlignment.START,
-                controls = [
-                    flet.Container(
-                        alignment = flet.alignment.center,
-                        height = 200,
-                        on_click = lambda _: page.go(f"/items/{i}"),
-                        image = flet.DecorationImage(
-                            src = items[i]["src"],
-                            fit = flet.ImageFit.FILL,
-                            opacity = 1,
-                        ),
-                        ),
-                    flet.Container(
-                        alignment = flet.alignment.center_left,
-                        margin = flet.margin.only(10, 0, 10, 0),
-                        content = flet.Column(
-                            alignment = flet.MainAxisAlignment.START,
-                            controls = [
-                                flet.Text(
-                                    items[i]["name"],
-                                    color = flet.Colors.WHITE,
-                                    weight = flet.FontWeight.W_500,
-                                    ),
-                                flet.Row(
-                                    alignment = flet.MainAxisAlignment.SPACE_BETWEEN,
-                                    controls = [
-                                        flet.Text(
-                                            f"{items[i]["price"]:,}",
-                                            color = flet.Colors.WHITE,
-                                            weight = flet.FontWeight.W_900,
-                                            ),
-                                        flet.Container(
-                                            on_click = favoriteIcon,
-                                            content = flet.Icon(
-                                                name = flet.Icons.FAVORITE_BORDER,
-                                                color = flet.Colors.WHITE,
-                                                size = 30,
-                                                ),
-                                            ),
-                                ],),
-                            ],),
-                        ),
-            ],),
-        )
-        # itemRow.append
-        itemRow.controls.append(itemCard)
 
     #main Page 설정
     home_main = flet.Container(
@@ -220,12 +116,13 @@ def main(page: flet.Page):
             alignment = flet.MainAxisAlignment.START,
             horizontal_alignment= flet.CrossAxisAlignment.CENTER,
             controls = [
-                vanner,
-                itemRow,
+                Vanner(page),
+                itemCardWidget(page),
                 ],
             )
         )
     
+    items = product["item"]
     #item Page 설정
     def itemIN(itemID):
         itemsPage_main = flet.Container(
@@ -246,14 +143,6 @@ def main(page: flet.Page):
                                 f"{items[itemID]["price"]:,}",
                                 color = flet.Colors.WHITE,
                                 weight = flet.FontWeight.W_900,
-                                ),
-                            flet.Container(
-                                on_click = favoriteIcon,
-                                content = flet.Icon(
-                                    name = flet.Icons.FAVORITE_BORDER,
-                                    color = flet.Colors.WHITE,
-                                    size = 30,
-                                    ),
                                 ),
                         ],),
                 ],),
