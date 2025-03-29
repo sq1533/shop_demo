@@ -1,16 +1,11 @@
 import flet
-from dataSet import product
 
-# data loads
-recommend = product["recommend"]
-recommendList = list(recommend.keys())
-
-def Vanner(page : flet.Page) -> flet.Column:
+def Vanner(page: flet.Page, recommend: dict) -> flet.Column:
     # Vanner 설정(이벤트 / 추천 상품)
     # big vanner
     bigBox = flet.Image(
         fit = flet.ImageFit.FILL,
-        src = recommend[recommendList[0]]["src"],
+        src = recommend[0]["src"],
         )
 
     # option vanner
@@ -22,7 +17,7 @@ def Vanner(page : flet.Page) -> flet.Column:
         )
 
     # vanner 목록
-    for i in recommendList:
+    for i in list(recommend.keys()):
         img = flet.Image(
             width = 100,
             height = 100,

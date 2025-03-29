@@ -1,13 +1,8 @@
 import flet
 import httpx
-from dataSet import product
-
-# data loads
-items = product["item"]
-itemList = list(items.keys())
 
 # 유저 비로그인
-def nonLoginItemCardWidget(page : flet.Page) -> flet.Row:
+def nonLoginItemCardWidget(page: flet.Page, item: dict) -> flet.Row:
     # itemCard
     # main itemCard
     itemRow = flet.Row(expand=True, expand_loose=True)
@@ -22,7 +17,7 @@ def nonLoginItemCardWidget(page : flet.Page) -> flet.Row:
         page.update()
 
     # itemCard 목록
-    for i in itemList:
+    for i in list(item.keys()):
         itemCard = flet.Card(
             color = flet.Colors.ORANGE_800,
             clip_behavior = flet.ClipBehavior.HARD_EDGE,
@@ -37,7 +32,7 @@ def nonLoginItemCardWidget(page : flet.Page) -> flet.Row:
                         height = 200,
                         on_click = lambda _: page.go(f"/items/{i}"),
                         image = flet.DecorationImage(
-                            src = items[i]["src"],
+                            src = item[i]["src"],
                             fit = flet.ImageFit.FILL,
                             opacity = 1,
                         ),
@@ -49,7 +44,7 @@ def nonLoginItemCardWidget(page : flet.Page) -> flet.Row:
                             alignment = flet.MainAxisAlignment.START,
                             controls = [
                                 flet.Text(
-                                    items[i]["name"],
+                                    item[i]["name"],
                                     color = flet.Colors.WHITE,
                                     weight = flet.FontWeight.W_500,
                                     ),
@@ -57,7 +52,7 @@ def nonLoginItemCardWidget(page : flet.Page) -> flet.Row:
                                     alignment = flet.MainAxisAlignment.SPACE_BETWEEN,
                                     controls = [
                                         flet.Text(
-                                            f"{items[i]["price"]:,}",
+                                            f"{item[i]["price"]:,}",
                                             color = flet.Colors.WHITE,
                                             weight = flet.FontWeight.W_900,
                                             ),
@@ -81,12 +76,18 @@ def nonLoginItemCardWidget(page : flet.Page) -> flet.Row:
 
 
 # 유저 로그인
-def LoginItemCardWidget(page : flet.Page, user : dict) -> flet.Row:
-    # 좋아요 리스트
-    likeList = user["like"]
+def LoginItemCardWidget(page : flet.Page, user : dict, item: dict) -> flet.Row:
 
     # itemCard Row
     itemRow = flet.Row(expand=True, expand_loose=True)
+
+    # like 아이콘
+    async def likeIcon(itemID) -> flet.Icons:
+        if itemID in user["like"]:
+            return flet.Icons.FAVORITE
+        else:
+            return flet.Icons.FAVORITE_BORDER
+
 
     # like 클릭 이벤트
     async def favoriteIcon(e, itemID):
@@ -94,19 +95,15 @@ def LoginItemCardWidget(page : flet.Page, user : dict) -> flet.Row:
         if icon_widget.name == flet.Icons.FAVORITE_BORDER:
             icon_widget.name = flet.Icons.FAVORITE
             async with httpx.AsyncClient():
-                response = await httpx.AsyncClient().post(url = "inLikeUrl", json = {"likeList":likeList, "likeItem":itemID})
-                response.raise_for_status()
-                return response.json()
+                await httpx.AsyncClient().post(url = f"ip/{user.keys()}/inLike", json = {"user":user, "likeItem":itemID})
         else:
             icon_widget.name = flet.Icons.FAVORITE_BORDER
             async with httpx.AsyncClient():
-                response = await httpx.AsyncClient().post(url = "outLikeurl", json = {"likeList":likeList, "likeItem":itemID})
-                response.raise_for_status()
-                return response.json()
+                await httpx.AsyncClient().post(url = f"ip/{user.keys()}/outLike", json = {"user":user, "likeItem":itemID})
         page.update()
 
     # itemCard 목록
-    for i in itemList:
+    for i in list(item.keys()):
         itemCard = flet.Card(
             color = flet.Colors.ORANGE_800,
             clip_behavior = flet.ClipBehavior.HARD_EDGE,
@@ -121,7 +118,7 @@ def LoginItemCardWidget(page : flet.Page, user : dict) -> flet.Row:
                         height = 200,
                         on_click = lambda _: page.go(f"/items/{i}"),
                         image = flet.DecorationImage(
-                            src = items[i]["src"],
+                            src = item[i]["src"],
                             fit = flet.ImageFit.FILL,
                             opacity = 1,
                         ),
@@ -133,7 +130,7 @@ def LoginItemCardWidget(page : flet.Page, user : dict) -> flet.Row:
                             alignment = flet.MainAxisAlignment.START,
                             controls = [
                                 flet.Text(
-                                    items[i]["name"],
+                                    item[i]["name"],
                                     color = flet.Colors.WHITE,
                                     weight = flet.FontWeight.W_500,
                                     ),
@@ -141,14 +138,14 @@ def LoginItemCardWidget(page : flet.Page, user : dict) -> flet.Row:
                                     alignment = flet.MainAxisAlignment.SPACE_BETWEEN,
                                     controls = [
                                         flet.Text(
-                                            f"{items[i]["price"]:,}",
+                                            f"{item[i]["price"]:,}",
                                             color = flet.Colors.WHITE,
                                             weight = flet.FontWeight.W_900,
                                             ),
                                         flet.Container(
                                             on_click = favoriteIcon,
                                             content = flet.Icon(
-                                                name = flet.Icons.FAVORITE_BORDER,
+                                                name = likeIcon,
                                                 color = flet.Colors.WHITE,
                                                 size = 30,
                                                 ),
