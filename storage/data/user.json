@@ -1,18 +1,22 @@
 {
     "test00@gmail.com":{
+        "id":"test00@gmail.com",
+        "passward":"123123",
         "nickname":"test",
         "name":"SDG",
         "phoneNumber":"01012341234",
         "address":[],
-        "like":[],
+        "like":["G250319005"],
         "basket":[]
     },
     "test01@gmail.com":{
+        "id":"test01@gmail.com",
+        "passward":"123123",
         "nickname":"test",
         "name":"SDG",
         "phoneNumber":"01012341234",
         "address":[],
-        "like":[],
+        "like":["G250319004"],
         "basket":[]
     }
 }

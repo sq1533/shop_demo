@@ -1,6 +1,5 @@
 import flet
 import json
-import httpx
 from shop_demo.src.widget.allAppBar import nonLoginAppBar, loginAppBar
 from shop_demo.src.widget.allBottomBar import nonLoginbottom, loginbottom
 from shop_demo.src.widget.homeItemCard import nonLoginItemCardWidget, LoginItemCardWidget
@@ -69,19 +68,6 @@ def main(page: flet.Page):
     # 유저 로그 인/아웃 분류
     login = False
 
-    # 로그인 페이지
-    async def login_clicked(id:str, passward:str) -> bool:
-        async with httpx.AsyncClient():
-            responed = await httpx.AsyncClient().post(url = "ip/goLogin", json = {"id":id, "passward":passward})
-            responed.status_code()
-        if responed["state"] == "ok":
-            login = True
-            return login
-        else:
-            login = False
-            return login
-
-
     #main Page 설정
     def home_main(user : dict | None, itemCards) -> flet.Container:
         home_main = flet.Container(
@@ -109,40 +95,35 @@ def main(page: flet.Page):
         )
         return itemsPage_main
 
-    def route_change(e):
+    # 페이지 라우트
+    def route_change(e) -> None:
         page.views.clear()
         itemID = page.route.split("/")[-1]
-        if page.route == "/" and login:
+
+        top_bar = loginAppBar(page=page, user=None, readProduct=product["logo"]) if login else nonLoginAppBar(page=page, readProduct=product["logo"])
+        bottom_bar = loginbottom() if login else nonLoginbottom()
+        item_cards = LoginItemCardWidget(page=page, user=None, item=product["item"]) if login else nonLoginItemCardWidget(page=page, item=product["item"])
+        if page.route == "/":
             page.views.append(home(
-                top = loginAppBar(page=page, user=None, readProduct=product["logo"]),
-                bottom = loginbottom(),
-                body = home_main(user = None, itemCards = LoginItemCardWidget(page=page, user=None, item=product["item"]))
+                top = top_bar,
+                bottom = bottom_bar,
+                body = home_main(user = None, itemCards = item_cards)
                 ))
-        elif page.route == "/" and not login:
-            page.views.append(home(
-                top = nonLoginAppBar(page=page, readProduct=product["logo"]),
-                bottom = nonLoginbottom(),
-                body = home_main(user = None, itemCards = nonLoginItemCardWidget(page=page, item=product["item"]))
-                ))
-        elif page.route == f"/items/{itemID}" and login:
+        elif page.route == f"/items/{itemID}":
             page.views.append(itemsPage(
-                top = loginAppBar(page=page, user=None, readProduct=product["logo"]),
-                bottom = loginbottom(),
-                body = itemsPage_main(itemID=itemID)
-                ))
-        elif page.route == f"/items/{itemID}" and not login:
-            page.views.append(itemsPage(
-                top = nonLoginAppBar(page=page, readProduct=product["logo"]),
-                bottom = nonLoginbottom(),
+                top = top_bar,
+                bottom = bottom_bar,
                 body = itemsPage_main(itemID=itemID)
                 ))
         page.update()
 
+    # 페이지 이동
     def view_pop(e):
         page.views.pop()
         top_view = page.views[-1]
         page.go(top_view.route)
 
+    # 페이지 설정
     page.on_route_change = route_change
     page.on_view_pop = view_pop
     page.go(page.route)
