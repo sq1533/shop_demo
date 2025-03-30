@@ -5,7 +5,7 @@ def Vanner(page: flet.Page, recommend: dict) -> flet.Column:
     # big vanner
     bigBox = flet.Image(
         fit = flet.ImageFit.FILL,
-        src = recommend[0]["src"],
+        src = recommend["G250319001"]["src"],
         )
 
     # option vanner

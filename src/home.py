@@ -1,10 +1,10 @@
 import flet
 import json
 import httpx
-from widget.appBar import nonLoginAppBar, loginAppBar
-from widget.bottomBar import nonLoginbottom, loginbottom
-from widget.itemCard import nonLoginItemCardWidget, LoginItemCardWidget
-from widget.vanner import Vanner
+from shop_demo.src.widget.allAppBar import nonLoginAppBar, loginAppBar
+from shop_demo.src.widget.allBottomBar import nonLoginbottom, loginbottom
+from shop_demo.src.widget.homeItemCard import nonLoginItemCardWidget, LoginItemCardWidget
+from shop_demo.src.widget.homeVanner import Vanner
 
 # 상품 로드
 with open(file="../storage/data/products.json", mode="r",encoding="utf-8") as product:
@@ -90,7 +90,7 @@ def main(page: flet.Page):
                 alignment = flet.MainAxisAlignment.START,
                 horizontal_alignment= flet.CrossAxisAlignment.CENTER,
                 controls = [
-                    Vanner(page),
+                    Vanner(page=page, recommend=product["recommend"]),
                     itemCards,
                     ],
                 )
@@ -113,11 +113,29 @@ def main(page: flet.Page):
         page.views.clear()
         itemID = page.route.split("/")[-1]
         if page.route == "/" and login:
-            page.views.append(home(top=loginAppBar, bottom=loginbottom, body=home_main(user = None, itemCards = LoginItemCardWidget(page=page, user=None, item=product["item"]))))
+            page.views.append(home(
+                top = loginAppBar(page=page, user=None, readProduct=product["logo"]),
+                bottom = loginbottom(),
+                body = home_main(user = None, itemCards = LoginItemCardWidget(page=page, user=None, item=product["item"]))
+                ))
         elif page.route == "/" and not login:
-            page.views.append(home(top=nonLoginAppBar, bottom=nonLoginbottom, body=home_main(user = None, itemCards = nonLoginItemCardWidget(page=page, item=product["item"]))))
+            page.views.append(home(
+                top = nonLoginAppBar(page=page, readProduct=product["logo"]),
+                bottom = nonLoginbottom(),
+                body = home_main(user = None, itemCards = nonLoginItemCardWidget(page=page, item=product["item"]))
+                ))
         elif page.route == f"/items/{itemID}" and login:
-            page.views.append(itemsPage(top=loginAppBar, bottom=loginbottom, body=itemsPage_main(itemID=itemID)))
+            page.views.append(itemsPage(
+                top = loginAppBar(page=page, user=None, readProduct=product["logo"]),
+                bottom = loginbottom(),
+                body = itemsPage_main(itemID=itemID)
+                ))
+        elif page.route == f"/items/{itemID}" and not login:
+            page.views.append(itemsPage(
+                top = nonLoginAppBar(page=page, readProduct=product["logo"]),
+                bottom = nonLoginbottom(),
+                body = itemsPage_main(itemID=itemID)
+                ))
         page.update()
 
     def view_pop(e):

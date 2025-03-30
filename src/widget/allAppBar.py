@@ -9,7 +9,7 @@ def nonLoginAppBar(page: flet.Page, readProduct: dict) -> flet.AppBar:
             alignment = flet.alignment.center,
             on_click = lambda _: page.go("/"),
             image = flet.DecorationImage(
-                src = readProduct["logo"]["src"],
+                src = readProduct["src"],
                 fit = flet.ImageFit.FILL,
             ),
             ),
@@ -36,7 +36,7 @@ def loginAppBar(page: flet.Page, user: dict, readProduct: dict) -> flet.AppBar:
             alignment = flet.alignment.center,
             on_click = lambda _: page.go("/"),
             image = flet.DecorationImage(
-                src = readProduct["logo"]["src"],
+                src = readProduct["src"],
                 fit = flet.ImageFit.FILL,
             ),
             ),
