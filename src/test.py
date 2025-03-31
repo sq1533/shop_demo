@@ -1,6 +1,6 @@
 import flet
 import json
-from widget.loginPage import loginForm
+from widget.signUp import signUpForm
 
 # 상품 로드
 with open(file="../storage/data/products.json", mode="r",encoding="utf-8") as product:
@@ -14,7 +14,7 @@ def main(page: flet.Page):
 
     home_main = flet.Container(
         width = 600,
-        content = loginForm(page=page),
+        content = signUpForm(page=page),
         )
 
     page.add(home_main)

@@ -1,7 +1,43 @@
 import flet
 import httpx
 
-# 유저 비로그인
+# 홈 화면 배너(이벤트 / 추천 상품)
+def Vanner(page: flet.Page, recommend: dict) -> flet.Column:
+    # big vanner
+    bigBox = flet.Image(
+        fit = flet.ImageFit.FILL,
+        src = recommend["G250319001"]["src"],
+        )
+
+    # option vanner
+    smallBoxRow = flet.Row(
+        spacing = 0,
+        expand = True,
+        expand_loose = True,
+        scroll = flet.ScrollMode.ALWAYS,
+        )
+
+    # vanner 목록
+    for i in list(recommend.keys()):
+        img = flet.Image(
+            width = 100,
+            height = 100,
+            fit = flet.ImageFit.FILL,
+            src = recommend[i]["src"],
+        )
+        smallBoxRow.controls.append(img)
+
+    # main vanner
+    vanner = flet.Column(
+        spacing = 0,
+        controls = [
+            bigBox,
+            smallBoxRow,
+        ],)
+    return vanner
+
+
+# 아이템 카드(유저 비로그인)
 def nonLoginItemCardWidget(page: flet.Page, item: dict) -> flet.Row:
     # itemCard
     # like 클릭 이벤트
@@ -76,7 +112,7 @@ def nonLoginItemCardWidget(page: flet.Page, item: dict) -> flet.Row:
     return itemRow
 
 
-# 유저 로그인
+# 아이템 카드(유저 로그인)
 def LoginItemCardWidget(page : flet.Page, user : dict, item: dict) -> flet.Row:
     # like 아이콘
     def likeIcon(itemID) -> flet.Icon:
