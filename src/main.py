@@ -1,71 +1,11 @@
 from fastapi import FastAPI
-import json
 from pydantic import BaseModel
-import secrets
-
-# 상품 로드
-with open(file="../storage/data/products.json", mode="r",encoding="utf-8") as product:
-    product = json.load(fp=product)
-# 유저 로드
-with open(file="../storage/data/user.json", mode="r",encoding="utf-8") as user:
-    user = json.load(fp=user)
-
-solt = secrets.token_hex(8)
 
 app = FastAPI()
 
-
-# 회원 가입 정보
-class goSignUpRequest(BaseModel):
-    id : str
-    pw : str
-    name : str
-    phone : str
-    adress : str
-
-# 회원가입
-@app.post("/goSignUp")
-async def goSignUp(userSignUp : goSignUpRequest):
-    with open(file="../storage/data/user.json", mode="r",encoding="utf-8") as user:
-        data = json.load(fp=user)
-    data[userSignUp["id"]] = {"id":userSignUp["id"], "pw":userSignUp["pw"],"name":userSignUp["name"],"phone":userSignUp["phone"],"adress":userSignUp["adress"]}
-    with open(file="../storage/data/user.json", mode="w",encoding="utf-8") as user:
-        json.dump(obj=data, fp=user, indent=4)
-    return {"state":"ok"}
-
-
-# 사용자 로그인 시도 정보
-class goLoginRequest(BaseModel):
-    id : str
-    passward : str
-
-# login 요청
-@app.post("/goLogin")
-async def goLogin(userPass : goLoginRequest):
-    if userPass["id"] in user.keys() and userPass["passward"] == user[userPass["id"]]["passward"]:
-        return {"state":"ok", "user":user[userPass["id"]]}
-    else:
-        return {"state":"false"}
-
-
-# 유저 like 정보
-class LikeRequest(BaseModel):
-    user: dict
-    likeItem: str
-
-# like_in 처리
-@app.post("/inLike/{userID}")
-async def inLike(data : LikeRequest) -> None:
-    if data["user"].keys() in user.keys():
-        inLike = data["likeList"].append(data["likeItem"])
-        result = list(set(inLike))
-
-# like_out 처리
-@app.post("/outLike/{userID}")
-async def outLike(data : LikeRequest) -> None:
-    if data["user"].keys() in user.keys():
-        outLike = data["likeList"].remove(data["likeItem"])
-        result = list(set(outLike))
+@app.get("/")
+async def go():
+    pass
 
 if __name__ == "__main__":
     import uvicorn
