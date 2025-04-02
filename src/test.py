@@ -1,4 +1,5 @@
 import flet
+import requests
 import json
 from widget.signUp import signUpForm
 
@@ -11,11 +12,14 @@ with open(file="../storage/data/user.json", mode="r",encoding="utf-8") as user:
 
 # APP 구동
 def main(page: flet.Page):
-
-    home_main = flet.Container(
-        width = 600,
-        content = signUpForm(page=page),
-        )
+    
+    #클릭 이벤트
+    def on_clicked():
+        pass
+    home_main = flet.ElevatedButton(
+        text = '버튼 클릭',
+        on_click=on_clicked,
+    )
 
     page.add(home_main)
 

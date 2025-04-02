@@ -1,10 +1,9 @@
-from fastapi import FastAPI
-from pydantic import BaseModel
+from fastapi import FastAPI, Depends
 
 app = FastAPI()
 
-@app.get("/")
-async def go():
+@app.get("/goSignUp")
+async def signUpUser():
     pass
 
 if __name__ == "__main__":
