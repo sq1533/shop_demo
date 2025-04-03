@@ -2,12 +2,20 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>telegramBot API</title>
-    <link rel="stylesheet" href="style.css">
+    <title>shop_demo</title>
+    <!--<link rel="stylesheet" href="style.css">-->
     <script src="https://unpkg.com/htmx.org@1.9.10"></script>
 </head>
 <body>
     <main>
+        <form hx-post="/goSignUp/" hx-trigger="" hx-target="#results">
+            <label for="idInput">아이디 입력창</label>
+            <input type="text" name="idEmailStr" id="idInput"></input>
+            <label for="pwInput">비밀번호 입력창</label>
+            <input type="text" name="pwStr" id="pwInput"></input>
+            <button type="submit">제출</button>
+        </form>
+        <div id="results"></div>
     </main>
 </body>
 </html>
