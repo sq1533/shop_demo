@@ -5,8 +5,8 @@ import secrets
 
 # 회원가입 요청 정보
 class userIn(BaseModel):
-    email : EmailStr
-    password :str = Field(default=None, min_length=8, max_length=16)
+    email : EmailStr = Field(..., description="이메일 주소")
+    password :str = Field(..., min_length=8, max_length=20)
 
 # 회원가입 응답 정보
 class userOut(BaseModel):

@@ -9,6 +9,8 @@ from shop_demo.api.schema import *
 secretKeyPath = "/storage/scrests/firebaseKey.json"
 # Fast API app 정의
 app = FastAPI()
+# HTML templates, jinjaTemplates
+templates = Jinja2Templates(directory="templates")
 
 # firebase 연결
 @app.on_event(event_type="startup")
@@ -27,22 +29,23 @@ async def setFireBase():
     except Exception as e:
         print(f"false : {e}")
 
-# HTML templates, jinjaTemplates
-templates = Jinja2Templates(directory="templates")
+# 회원가입 요청
+@app.post("/goSignUp", response_class=HTMLResponse)
+async def sign_up(request: userIn):
+    try:
+        user = auth.creat_user(
+            email=request.email,
+            password=request.password,
+            disabled=True
+        )
+    except Exception as e:
+        print(f"false : {e}")
+
 
 # mainHome 진입
 @app.get("/", response_class=HTMLResponse)
 async def home(request:Request):
     return templates.TemplateResponse("mainPage.html",{"request":request})
-
-# 회원가입 요청 및 응답
-@app.post("/goSignUp", response_class=HTMLResponse)
-async def signUpUser(user : userIn=Form(...)):
-    results = f"<div>{user.email} 환영합니다.</div>"
-    if user.email == None:
-        results = f"<div>입력값 없음</div>"
-        raise HTMLResponse(content=results, status_code=400, headers=None)
-    return HTMLResponse(content=results, status_code=201, headers=None)
 
 if __name__ == "__main__":
     import uvicorn
