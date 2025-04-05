@@ -8,14 +8,7 @@
 </head>
 <body>
     <main>
-        <form hx-post="/goSignUp/" hx-target="#results" hx-swap="outerHTML">
-            <label for="idInput">아이디 입력창</label>
-            <input type="text" name="idEmailStr" id="idInput"></input>
-            <label for="pwInput">비밀번호 입력창</label>
-            <input type="password" name="pwStr" id="pwInput"></input>
-            <button type="submit">제출</button>
-        </form>
-        <div id="results"></div>
+        <button type="button" hx-get="/goSignup" hx-trigger="click" hx-swap="outerHTML">회원가입</button>
     </main>
 </body>
 </html>
