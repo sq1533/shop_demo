@@ -1,6 +1,6 @@
 <form hx-post="/goSignup/{{ email }}/emailCheck" hx-swap="innerHTML">
     <label for="userEmail">Email</label>
-    <div id="userEmail">{{ email }}</div>
+    <div id="userEmail" name="email">{{ email }}</div>
     <label for="accessNoInput">Email_checked</label>
     <input type="text" name="accessNo" id="accessNoInput"></input>
     <button type="submit">제출</button>
