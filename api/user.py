@@ -16,20 +16,44 @@ router = APIRouter(prefix="/goSignup", tags=["users"])
 
 templates = Jinja2Templates(directory="templates")
 
+state_store = {}
+
 # step 1.
 @router.post("/email", response_class=HTMLResponse)
 async def email(request: Request, email: Annotated[signupEmail, Form(...)]):
     # 이메일 요청 보낼시, state 설정 및 검증 필요
     try:
+        state = secrets.token_urlsafe(16)
         return templates.TemplateResponse(
             request = request,
             name = "signup_emailC.html",
-            context={"email":email.email}
+            context={"email":email.email},
+            headers={"X-State":state}
             )
     except Exception as e:
         print(e)
 
 # step 2.
 @router.post("/{email}/emailCheck", response_class=HTMLResponse)
-async def emailCheck(request: None):
+async def emailCheck(request: Request, check: Annotated[signupEmailCheck, Form(...)]):
+    # state 및 인증번호 확인 사항 체크
+    try:
+        state = request.headers.get("X-State")
+        if state and state in state_store:
+            return templates.TemplateResponse(
+                request = request,
+                name = "signup_password.html",
+                context={"email":check.email}
+                )
+    except Exception as e:
+        print(e)
+
+# step 3.
+@router.post("/{email}/password", response_class=HTMLResponse)
+async def emailCheck(request: Request):
+    pass
+
+# step 3.
+@router.post("/{email}/userInfo", response_class=HTMLResponse)
+async def emailCheck(request: Request):
     pass
