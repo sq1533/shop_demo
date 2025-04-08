@@ -1,22 +1,15 @@
+import os
 import firebase_admin
 from firebase_admin import credentials, auth
+from contextlib import asynccontextmanager
 from fastapi import FastAPI, Request
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 from api import user
 
-# FireBase secret_keys
-secretKeyPath = "/storage/secrets/firebaseKey.json"
-# Fast API app 정의 및 라우터
-app = FastAPI()
-app.include_router(user.router)
-# HTML templates, jinjaTemplates
-templates = Jinja2Templates(directory="templates")
-
-"""
-# firebase 연결
-@app.on_event(event_type="startup")
-async def setFireBase():
+# Fast API 수명, 시작시 firebase 연결, 종료시 firebase 종료
+@asynccontextmanager
+async def lifespan(app: FastAPI):
     # Fast API 실행시 FireBase의 초기 설정을 수행하기 위함
     # startup 이벤트는 app실행시 단 한번만 실행되며, FireBase 초기화가 진행된다.
     # FireBase 초기화 이유
@@ -28,13 +21,17 @@ async def setFireBase():
         print("FireBase 앱 초기화 완료")
     except Exception as e:
         print(f"false : {e}")
+    yield
 
 
-# 프로그램 종료
-@app.on_event(event_type="shutdown")
-async def shutdown():
-    pass
-"""
+# FireBase secret_keys
+secretKeyPath = os.path.join(os.path.dirname(__file__),"storage","secrets","firebaseKey.json")
+# Fast API app 정의 및 라우터
+app = FastAPI(lifespan=lifespan)
+app.include_router(user.router)
+# HTML templates, jinjaTemplates
+templates = Jinja2Templates(directory="templates")
+
 
 # mainHome 페이지
 @app.get("/", response_class=HTMLResponse)
