@@ -10,7 +10,7 @@ class signupEmail(BaseModel):
 # step 2. 이메일 검증
 class signupEmailCheck(BaseModel):
     email : EmailStr
-    access : str = Field(..., min_length=6, max_length=6)
+    accessNo : str = Field(..., min_length=6, max_length=6)
 
 # step 3. 비밀번호 설정
 class signupPassword(BaseModel):

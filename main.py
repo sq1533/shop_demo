@@ -5,6 +5,8 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI, Request
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
+from starlette.middleware import Middleware
+from starlette.middleware.sessions import SessionMiddleware
 from api import user
 
 # Fast API 수명, 시작시 firebase 연결, 종료시 firebase 종료
@@ -23,12 +25,19 @@ async def lifespan(app: FastAPI):
         print(f"false : {e}")
     yield
 
-
 # FireBase secret_keys
 secretKeyPath = os.path.join(os.path.dirname(__file__),"storage","secrets","firebaseKey.json")
+
 # Fast API app 정의 및 라우터
-app = FastAPI(lifespan=lifespan)
+app = FastAPI(
+    lifespan=lifespan,
+    middleware=[
+        Middleware(SessionMiddleware, secret_key=os.urandom(16).hex())
+        ]
+    )
+
 app.include_router(user.router)
+
 # HTML templates, jinjaTemplates
 templates = Jinja2Templates(directory="templates")
 

@@ -21,23 +21,22 @@ async def email(request: Request, email: Annotated[signupEmail, Form(...)]):
     # 이메일 요청 보낼시, state 설정 및 검증 필요
     try:
         auth.get_user_by_email(email=email.email)
-        if auth.UserNotFoundError:
-            request.session["registration_email"] = email.email
-            return templates.TemplateResponse(
-                request = request,
-                name = "signup_emailC.html",
-                context={"email":email.email}
-                )
-        else:
-            existsError = """
-            <div>이미 사용중인 이메일 입니다.</div>
-            """
-            return HTMLResponse(content=existsError)
+        existsError = """
+        <div>이미 사용중인 이메일 입니다.</div>
+        """
+        return HTMLResponse(content=existsError)
+    except auth.UserNotFoundError:
+        request.session["registration_email"] = email.email
+        return templates.TemplateResponse(
+            request = request,
+            name = "signup_emailC.html",
+            context={"email":email.email}
+            )
     except Exception as e:
         print(e)
 
 # step 2.
-@router.post("/{email}/emailCheck", response_class=HTMLResponse)
+@router.post("/emailCheck", response_class=HTMLResponse)
 async def emailCheck(request: Request, check: Annotated[signupEmailCheck, Form(...)]):
     # state 및 인증번호 확인 사항 체크
     try:
@@ -56,7 +55,7 @@ async def emailCheck(request: Request, check: Annotated[signupEmailCheck, Form(.
         print(e)
 
 # step 3.
-@router.post("/{email}/password", response_class=HTMLResponse)
+@router.post("/password", response_class=HTMLResponse)
 async def emailCheck(request: Request, password: Annotated[signupPassword, Form(...)]):
     # 비밀번호 영문 + 숫자 + 특수문자 조합 검증
     try:
@@ -75,7 +74,7 @@ async def emailCheck(request: Request, password: Annotated[signupPassword, Form(
         print(e)
 
 # step 4.
-@router.post("/{email}/userInfo", response_class=HTMLResponse)
+@router.post("/userInfo", response_class=HTMLResponse)
 async def emailCheck(request: Request, userInfo: Annotated[signupUserInfo, Form(...)]):
     # 유저 닉네임, 주소 정보 입력
     try:
@@ -88,4 +87,3 @@ async def emailCheck(request: Request, userInfo: Annotated[signupUserInfo, Form(
         pass
     except Exception as e:
         print(e)
-

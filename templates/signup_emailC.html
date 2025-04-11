@@ -1,5 +1,5 @@
-<form hx-post="/goSignup/{{ email }}/emailCheck" hx-swap="innerHTML">
-    <input type="hidden" id="userEmail" name="email" value="{{ email }}">
+<form hx-post="/goSignup/emailCheck" hx-swap="innerHTML">
+    <input type="hidden" name="email" value="{{ email }}">
     <label for="userEmail">Email</label>
     <div id="userEmail" name="email">{{ email }}</div>
     <label for="accessNoInput">Email_checked</label>
