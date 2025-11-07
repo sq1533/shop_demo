@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Amuredo 쇼핑몰</title>
+</head>
+<body>
+    <h1>상품 목록</h1>
+    <ul>
+        {% for item_id, item_data in items.items() %}
+            <li>
+                <a href="/items/{{ item_id }}">
+                    {{ item_data.name }} </a>
+                <span>(가격: {{ item_data.price }}원)</span>
+            </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
