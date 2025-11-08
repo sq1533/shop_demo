@@ -8,7 +8,7 @@ class itemBase(BaseModel):
     detail: HttpUrl | None = None
     paths: list[HttpUrl] | None = None
     price: int = Field(..., gt=0, description="가격은 0보다 커야 합니다.")
-    discount_rate: int = Field(0, ge=0, le=100, description="할인율은 0~100 사이여야 합니다.")
+    discount: int = Field(0, ge=0, le=100, description="할인율은 0~100 사이여야 합니다.")
     event: str | None = Field(None, max_length=100)
 
 class feedbackType(BaseModel):

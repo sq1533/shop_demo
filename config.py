@@ -2,6 +2,7 @@ from pydantic_settings import BaseSettings
 
 class Settings(BaseSettings):
     FIREBASE_SERVICE_ACCOUNT_PATH: str
+    FIREBASE_DATABASE_URL: str
 
     class Config:
         env_file = ".env"
