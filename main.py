@@ -34,18 +34,15 @@ mock_db_items = {
     3: {"name": "볼캡 모자", "price": 35000, "description": "자외선 차단에 필수적인 패션 모자입니다."}
 }
 
-
-# --- 01main.html (메인 페이지) 라우트 ---
-@app.get("/", response_class=HTMLResponse)
+@app.get('/', response_class=HTMLResponse)
 async def read_main(request: Request):
-    """
-    메인 페이지를 렌더링하고 '모든' 아이템 목록을 템플릿에 전달합니다.
-    """
-    # 'items'라는 이름으로 템플릿에 데이터(mock_db_items) 전달
-    return templates.TemplateResponse("01main.html", {
-        "request": request, 
-        "items": mock_db_items  # DB에서 가져온 아이템 목록
-    })
+    return templates.TemplateResponse(
+        '01main.html',
+        {
+        "request": request,
+        "items": mock_db_items
+        }
+        )
 
 
 # --- 02item.html (상세 페이지) 라우트 ---
